@@ -6,8 +6,10 @@ module com.gymargente.gymmanager {
 
     opens com.gymargente.gymmanager to javafx.fxml;
     exports com.gymargente.gymmanager;
-    exports com.gymargente.gymmanager.persistence;
-    opens com.gymargente.gymmanager.persistence to javafx.fxml;
-    exports com.gymargente.gymmanager.user;
-    opens com.gymargente.gymmanager.user to javafx.fxml;
+    exports com.gymargente.gymmanager.db;
+    opens com.gymargente.gymmanager.db to javafx.fxml;
+    exports com.gymargente.gymmanager.model.user;
+    opens com.gymargente.gymmanager.model.user to javafx.fxml;
+    exports com.gymargente.gymmanager.controller;
+    opens com.gymargente.gymmanager.controller to javafx.fxml;
 }

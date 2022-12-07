@@ -1,4 +1,4 @@
-package com.gymargente.gymmanager.user;
+package com.gymargente.gymmanager.model.user;
 
 public class User {
     private int id;

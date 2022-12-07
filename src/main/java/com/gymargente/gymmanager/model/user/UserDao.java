@@ -1,20 +1,25 @@
-package com.gymargente.gymmanager.user;
+package com.gymargente.gymmanager.model.user;
 
-import com.gymargente.gymmanager.persistence.Dao;
-import com.gymargente.gymmanager.persistence.DaoException;
-import com.gymargente.gymmanager.persistence.Database;
-import com.gymargente.gymmanager.user.User;
+import com.gymargente.gymmanager.db.Dao;
+import com.gymargente.gymmanager.db.DaoException;
 
+import java.sql.Connection;
 import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class UserDao implements Dao<User> {
+    Connection connection;
+
+    public UserDao(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
-    public void save(User user) {
+    public void create(User user) {
         String sql = "insert into user (name, password) values (?, ?)";
-        var connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
             statement.setString(1, user.getName());
@@ -28,14 +33,13 @@ public class UserDao implements Dao<User> {
 
     @Override
     public Optional<User> findById(int id) {
-        var connection = Database.getInstance().getConnection();
         String sql = "select * from user where id = ?";
         try {
             var statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             var resultSet = statement.executeQuery();
 
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 var name = resultSet.getString("name");
                 var password = resultSet.getString("password");
                 User user = new User(id, name, password);
@@ -45,13 +49,11 @@ public class UserDao implements Dao<User> {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-
         return Optional.empty();
     }
 
     @Override
     public void update(User user) {
-        var connection = Database.getInstance().getConnection();
         try {
             String sql = "update user set name=? where id=?";
             var statement = connection.prepareStatement(sql);
@@ -67,7 +69,6 @@ public class UserDao implements Dao<User> {
 
     @Override
     public void delete(User user) {
-        var connection = Database.getInstance().getConnection();
         try {
             String sql = "delete from user where id=?";
             var statement = connection.prepareStatement(sql);
@@ -77,20 +78,16 @@ public class UserDao implements Dao<User> {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-
     }
 
     @Override
     public List<User> getAll() {
-
         List<User> users = new ArrayList<>();
-        var connection = Database.getInstance().getConnection();
-
         try {
             String sql = "select * from user";
             var statement = connection.createStatement();
             var resultSet = statement.executeQuery(sql);
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 var id = resultSet.getInt("id");
                 var name = resultSet.getString("name");
                 var password = resultSet.getString("password");

@@ -1,4 +1,4 @@
-package com.gymargente.gymmanager.persistence;
+package com.gymargente.gymmanager.db;
 
 import java.io.Serial;
 import java.sql.SQLException;

@@ -1,42 +1,34 @@
 package com.gymargente.gymmanager;
 
-import com.gymargente.gymmanager.persistence.Dao;
-import com.gymargente.gymmanager.persistence.Database;
-import com.gymargente.gymmanager.user.User;
-import com.gymargente.gymmanager.user.UserDao;
+import com.gymargente.gymmanager.db.Dao;
+import com.gymargente.gymmanager.db.Database;
+import com.gymargente.gymmanager.model.user.User;
+import com.gymargente.gymmanager.model.user.UserDao;
 
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Properties;
 
 public class AppSansFx {
 
+    private static Database db;
+
     public static void main(String[] args) {
 
-        String dbPropertiesFile = "/config/db.properties";
-        Properties properties = new Properties();
-        try {
-            properties.load(AppSansFx.class.getResourceAsStream(dbPropertiesFile));
-        } catch (IOException e) {
-            System.out.println("Ne peut pas charger le fichier des propriétés : " + dbPropertiesFile);
-        }
 
-        var db = Database.getInstance();
+        db = Database.getInstance();
 
         try {
-            db.connect(properties);
+            db.connect();
         } catch (SQLException e) {
             System.out.println("Ne peut pas se connecter à la base de données.");
             return;
         }
-
         System.out.println("Base de données connectée.");
 
-        Dao<User> userDao = new UserDao();
+        Dao<User> userDao = new UserDao(db.getConnection());
 
         var userOptional = userDao.findById(7);
         var user = userOptional.get();
-        user.setName("MickeyMouse");
+        user.setName("Gandalf");
         userDao.update(user);
 
         try {
