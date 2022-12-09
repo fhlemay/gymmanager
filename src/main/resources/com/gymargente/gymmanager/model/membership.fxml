@@ -8,7 +8,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.gymargente.gymmanager.model.membership.MembershipController"
+            fx:controller="com.gymargente.gymmanager.model.abonnement.AbonnementController"
             prefHeight="400.0" prefWidth="600.0">
 
 </AnchorPane>

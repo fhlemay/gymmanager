@@ -2,10 +2,11 @@ package com.gymargente.gymmanager;
 
 import com.gymargente.gymmanager.db.Dao;
 import com.gymargente.gymmanager.db.Database;
-import com.gymargente.gymmanager.model.user.User;
-import com.gymargente.gymmanager.model.user.UserDao;
+import com.gymargente.gymmanager.model.utilisateur.Utilisateur;
+import com.gymargente.gymmanager.model.utilisateur.UtilisateurDao;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class AppSansFx {
 
@@ -24,12 +25,32 @@ public class AppSansFx {
         }
         System.out.println("Base de données connectée.");
 
-        Dao<User> userDao = new UserDao(db.getConnection());
+        Dao<Utilisateur> utilisateurDao = new UtilisateurDao();
 
-        var userOptional = userDao.findById(7);
-        var user = userOptional.get();
-        user.setName("Gandalf");
-        userDao.update(user);
+        List<Utilisateur> utilisateurs = utilisateurDao.getAll();
+        utilisateurs.forEach(System.out::println);
+
+//        for (int i = 0; i<10; i++) {
+//            utilisateurDao.create(new Utilisateur("Bob", "motdepassebidon", 0));
+//        }
+        var utilisateurOpt = utilisateurDao.findById(7);
+
+//        if(utilisateurOpt.isPresent()){
+//            var utilisateur = new Utilisateur(
+//                    utilisateurOpt.get().id(),
+//                    "Gandalf",
+//                    utilisateurOpt.get().motDePasse(),
+//                    utilisateurOpt.get().profileId());
+//            utilisateurDao.update(utilisateur);
+//            utilisateurDao.delete(utilisateurOpt.get());
+//        }
+
+
+
+
+
+
+
 
         try {
             db.disconnect();

@@ -16,7 +16,6 @@ public class Database {
     private String server, port, database, user, password;
 
     private Database() {
-        setProperties();
     }
 
     public static Database getInstance() {
@@ -28,10 +27,13 @@ public class Database {
     }
 
     public void connect() throws SQLException {
+        setProperties();
         String dbConnector = "jdbc:mysql://";
         String url = dbConnector + server + ":" + port + "/" + database;
+        System.out.println("Connexion à " + server + ":" + port + "/" + database);
         connection = DriverManager.getConnection(url, user, password);
-//        connection.setAutoCommit(false); // autocommit : met à jour la db automatiquement
+//        System.out.println("Attention : AutoCommit est désactivé. (mode démo)");
+//        connection.setAutoCommit(false); // TODO : autocommit : met à jour la db automatiquement
     }
 
     public void disconnect() throws SQLException {
