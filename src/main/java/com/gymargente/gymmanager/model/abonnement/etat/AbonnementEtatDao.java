@@ -1,10 +1,8 @@
-package com.gymargente.gymmanager.model.utilisateur.profil;
+package com.gymargente.gymmanager.model.abonnement.etat;
 
 import com.gymargente.gymmanager.db.Dao;
 import com.gymargente.gymmanager.db.DaoException;
 import com.gymargente.gymmanager.db.Database;
-import com.gymargente.gymmanager.model.consultation.etat.ConsultationEtat;
-import com.gymargente.gymmanager.model.utilisateur.Utilisateur;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -12,14 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ProfilDao implements Dao<Profil> {
+public class AbonnementEtatDao implements Dao<AbonnementEtat> {
     @Override
-    public void create(Profil profil) {
-        String sql = "INSERT INTO profil (nom) VALUES (?)";
+    public void create(AbonnementEtat abonnementEtat) {
+        String sql = "INSERT INTO abonnementEtat (nom) VALUES (?)";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
-            statement.setString(1, profil.nom());
+            statement.setString(1, abonnementEtat.nom());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -28,15 +26,15 @@ public class ProfilDao implements Dao<Profil> {
     }
 
     @Override
-    public Optional<Profil> findById(int id) {
-        String sql = "SELECT nom FROM profil WHERE id = ?";
+    public Optional<AbonnementEtat> findById(int id) {
+        String sql = "SELECT nom FROM abonnementEtat WHERE id = ?";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             var resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return Optional.of(new Profil(id, resultSet.getString("nom")));
+                return Optional.of(new AbonnementEtat(id, resultSet.getString("nom")));
             }
             statement.close();
         } catch (SQLException e) {
@@ -46,13 +44,13 @@ public class ProfilDao implements Dao<Profil> {
     }
 
     @Override
-    public void update(Profil profil) {
+    public void update(AbonnementEtat abonnementEtat) {
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "UPDATE profil SET nom=? where id=?";
+            String sql = "UPDATE abonnementEtat SET nom=? where id=?";
             var statement = connection.prepareStatement(sql);
-            statement.setString(1, profil.nom());
-            statement.setInt(2, profil.id());
+            statement.setString(1, abonnementEtat.nom());
+            statement.setInt(2, abonnementEtat.id());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -61,12 +59,12 @@ public class ProfilDao implements Dao<Profil> {
     }
 
     @Override
-    public void delete(Profil profil) {
+    public void delete(AbonnementEtat abonnementEtat) {
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "DELETE FROM profil WHERE id = ?";
+            String sql = "DELETE FROM abonnementEtat WHERE id = ?";
             var statement = connection.prepareStatement(sql);
-            statement.setInt(1, profil.id());
+            statement.setInt(1, abonnementEtat.id());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -75,15 +73,15 @@ public class ProfilDao implements Dao<Profil> {
     }
 
     @Override
-    public List<Profil> getAll() {
-        List<Profil> profils = new ArrayList<>();
+    public List<AbonnementEtat> getAll() {
+        List<AbonnementEtat> abonnementEtats = new ArrayList<>();
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "SELECT id, nom FROM profil";
+            String sql = "SELECT id, nom FROM abonnementEtat";
             var statement = connection.createStatement();
             var resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
-                profils.add(new Profil(
+                abonnementEtats.add(new AbonnementEtat(
                         resultSet.getInt("id"),
                         resultSet.getString("nom")
                 ));
@@ -92,6 +90,6 @@ public class ProfilDao implements Dao<Profil> {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return profils;
+        return abonnementEtats;
     }
 }

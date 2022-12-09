@@ -1,9 +1,9 @@
-package com.gymargente.gymmanager.model.abonnement;
+package com.gymargente.gymmanager.model.consultation;
 
 import com.gymargente.gymmanager.db.Dao;
 import com.gymargente.gymmanager.db.DaoException;
 import com.gymargente.gymmanager.db.Database;
-import com.gymargente.gymmanager.model.consultation.Consultation;
+import com.gymargente.gymmanager.model.utilisateur.Utilisateur;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,18 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class AbonnementDao implements Dao<Abonnement> {
+public class ConsultationDao implements Dao<Consultation> {
     @Override
-    public void create(Abonnement abonnement) {
-        String sql = "INSERT INTO abonnement (idClient, idPlan, dateDebut, dateFin, etat) VALUES (?, ?, ?, ?, ?)";
+    public void create(Consultation consultation) {
+        String sql = "INSERT INTO consultation (idSpecialiste, idClient, dateConsultation, etat) VALUES (?, ?, ?, ?)";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
-            statement.setInt(1, abonnement.idClient());
-            statement.setInt(2, abonnement.idPlan());
-            statement.setDate(3, new java.sql.Date(abonnement.dateDebut().getTime()));
-            statement.setDate(4, new java.sql.Date(abonnement.dateFin().getTime()));
-            statement.setInt(5, abonnement.etat());
+            statement.setInt(1, consultation.idSpecialiste());
+            statement.setInt(2, consultation.idClient());
+            statement.setDate(3, new java.sql.Date(consultation.dateConsultation().getTime()));
+            statement.setInt(4, consultation.etat());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -31,22 +30,22 @@ public class AbonnementDao implements Dao<Abonnement> {
     }
 
     @Override
-    public Optional<Abonnement> findById(int id) {
-        String sql = "SELECT idClient, idPlan, dateDebut, dateFin, etat FROM abonnement WHERE id = ?";
+    public Optional<Consultation> findById(int id) {
+        String sql = "SELECT idSpecialiste, idClient, dateConsultation, etat FROM consultation WHERE id = ?";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             var resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return Optional.of(new Abonnement(
+                var consultation = new Consultation(
                         id,
+                        resultSet.getInt("idSpecialiste"),
                         resultSet.getInt("idClient"),
-                        resultSet.getInt("idPlan"),
-                        resultSet.getDate("dateDebut"),
-                        resultSet.getDate("dateFin"),
+                        resultSet.getDate("dateConsultation"),
                         resultSet.getInt("etat")
-                        ));
+                );
+                return Optional.of(consultation);
             }
             statement.close();
         } catch (SQLException e) {
@@ -56,17 +55,16 @@ public class AbonnementDao implements Dao<Abonnement> {
     }
 
     @Override
-    public void update(Abonnement abonnement) {
+    public void update(Consultation consultation) {
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "UPDATE abonnement SET idClient=?, idPlan=?, dateDebut=?, dateFin=?, etat=? where id=?";
+            String sql = "UPDATE consultation SET idSpecialiste=?, idClient=?, dateConsultation=?, etat=? where id=?";
             var statement = connection.prepareStatement(sql);
-            statement.setInt(1, abonnement.idClient());
-            statement.setInt(2, abonnement.idPlan());
-            statement.setDate(3, new java.sql.Date(abonnement.dateDebut().getTime()));
-            statement.setDate(4, new java.sql.Date(abonnement.dateFin().getTime()));
-            statement.setInt(5, abonnement.etat());
-            statement.setInt(6, abonnement.id());
+            statement.setInt(1, consultation.idSpecialiste());
+            statement.setInt(2, consultation.idClient());
+            statement.setDate(3, new java.sql.Date(consultation.dateConsultation().getTime()));
+            statement.setInt(4, consultation.etat());
+            statement.setInt(5, consultation.id());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -75,12 +73,12 @@ public class AbonnementDao implements Dao<Abonnement> {
     }
 
     @Override
-    public void delete(Abonnement abonnement) {
+    public void delete(Consultation consultation) {
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "DELETE FROM abonnement WHERE id = ?";
+            String sql = "DELETE FROM consulation WHERE id = ?";
             var statement = connection.prepareStatement(sql);
-            statement.setInt(1, abonnement.id());
+            statement.setInt(1, consultation.id());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -89,20 +87,19 @@ public class AbonnementDao implements Dao<Abonnement> {
     }
 
     @Override
-    public List<Abonnement> getAll() {
-        List<Abonnement> abonnements = new ArrayList<>();
+    public List<Consultation> getAll() {
+        List<Consultation> consultations = new ArrayList<>();
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "SELECT id, idClient, idPlan, dateDebut, dateFin, etat FROM abonnement FROM abonnement";
+            String sql = "SELECT id, idSpecialiste, idClient, dateConsultation, etat FROM consultation";
             var statement = connection.createStatement();
             var resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
-                abonnements.add(new Abonnement(
+                consultations.add(new Consultation(
                         resultSet.getInt("id"),
+                        resultSet.getInt("idSpecialiste"),
                         resultSet.getInt("idClient"),
-                        resultSet.getInt("idPlan"),
-                        new java.util.Date(resultSet.getTimestamp("dateDebut").getTime()),
-                        new java.util.Date(resultSet.getTimestamp("dateFin").getTime()),
+                        new java.util.Date(resultSet.getTimestamp("dateConsultation").getTime()),
                         resultSet.getInt("etat")
                 ));
             }
@@ -110,6 +107,6 @@ public class AbonnementDao implements Dao<Abonnement> {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return abonnements;
+        return consultations;
     }
 }
