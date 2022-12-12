@@ -1,4 +1,4 @@
-package com.gymargente.gymmanager.model.plan;
+package com.gymargente.gymmanager.model.plan.acces;
 
 import com.gymargente.gymmanager.db.Dao;
 import com.gymargente.gymmanager.db.DaoException;
@@ -10,17 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PlanDao implements Dao<Plan> {
+public class AccesDao implements Dao<Acces> {
     @Override
-    public void create(Plan plan) {
-        String sql = "INSERT INTO plan (idTypeAcces, idPeriode, option, prix) VALUES (?, ?, ?, ?)";
+    public void create(Acces acces) {
+        String sql = "INSERT INTO acces (nom) VALUES (?)";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
-            statement.setInt(1, plan.idTypeAcces());
-            statement.setInt(2, plan.idPeriode());
-            statement.setBoolean(3, plan.option());
-            statement.setInt(4, plan.prix());
+            statement.setString(1, acces.nom());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -29,21 +26,15 @@ public class PlanDao implements Dao<Plan> {
     }
 
     @Override
-    public Optional<Plan> findById(int id) {
-        String sql = "SELECT idTypeAcces, idPeriode, option, prix FROM plan WHERE id = ?";
+    public Optional<Acces> findById(int id) {
+        String sql = "SELECT nom FROM acces WHERE id = ?";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             var resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return Optional.of(new Plan(
-                        id,
-                        resultSet.getInt("idTypeAcces"),
-                        resultSet.getInt("idPeriode"),
-                        resultSet.getBoolean("option"),
-                        resultSet.getInt("prix")
-                ));
+                return Optional.of(new Acces(id, resultSet.getString("nom")));
             }
             statement.close();
         } catch (SQLException e) {
@@ -53,16 +44,13 @@ public class PlanDao implements Dao<Plan> {
     }
 
     @Override
-    public void update(Plan plan) {
+    public void update(Acces acces) {
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "UPDATE plan SET idTypeAcces=?, idPeriode=?, option=?, prix=? WHERE id=?";
+            String sql = "UPDATE acces SET nom=? WHERE id=?";
             var statement = connection.prepareStatement(sql);
-            statement.setInt(1, plan.idTypeAcces());
-            statement.setInt(2, plan.idPeriode());
-            statement.setBoolean(3, plan.option());
-            statement.setInt(4, plan.prix());
-            statement.setInt(5, plan.id());
+            statement.setString(1, acces.nom());
+            statement.setInt(2, acces.id());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -71,12 +59,12 @@ public class PlanDao implements Dao<Plan> {
     }
 
     @Override
-    public void delete(Plan plan) {
+    public void delete(Acces acces) {
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "DELETE FROM plan WHERE id = ?";
+            String sql = "DELETE FROM acces WHERE id = ?";
             var statement = connection.prepareStatement(sql);
-            statement.setInt(1, plan.id());
+            statement.setInt(1, acces.id());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -85,26 +73,23 @@ public class PlanDao implements Dao<Plan> {
     }
 
     @Override
-    public List<Plan> getAll() {
-        List<Plan> plans = new ArrayList<>();
+    public List<Acces> getAll() {
+        List<Acces> access = new ArrayList<>();
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "SELECT id, idTypeAcces, idPeriode, option, prix FROM plan FROM plan";
+            String sql = "SELECT id, nom FROM acces";
             var statement = connection.createStatement();
             var resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
-                plans.add(new Plan(
+                access.add(new Acces(
                         resultSet.getInt("id"),
-                        resultSet.getInt("idTypeAcces"),
-                        resultSet.getInt("idPeriode"),
-                        resultSet.getBoolean("option"),
-                        resultSet.getInt("prix")
+                        resultSet.getString("nom")
                 ));
             }
             statement.close();
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return plans;
+        return access;
     }
 }

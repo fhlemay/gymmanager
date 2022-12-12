@@ -1,4 +1,4 @@
-package com.gymargente.gymmanager;
+package com.gymargente.gymmanager.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

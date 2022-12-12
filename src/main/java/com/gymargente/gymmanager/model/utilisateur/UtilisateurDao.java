@@ -13,11 +13,11 @@ public class UtilisateurDao implements Dao<Utilisateur> {
 
     @Override
     public void create(Utilisateur utilisateur) {
-        String sql = "INSERT INTO utilisateur (nom, motDePasse, idProfile) VALUES (?, ?)";
+        String sql = "INSERT INTO utilisateur (identifiant, motDePasse, idProfile) VALUES (?, ?)";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
-            statement.setString(1, utilisateur.nom());
+            statement.setString(1, utilisateur.identifiant());
             statement.setString(2, utilisateur.motDePasse());
             statement.executeUpdate();
             statement.close();
@@ -28,7 +28,7 @@ public class UtilisateurDao implements Dao<Utilisateur> {
 
     @Override
     public Optional<Utilisateur> findById(int id) {
-        String sql = "SELECT nom, motDePasse, idProfile FROM utilisateur WHERE id = ?";
+        String sql = "SELECT identifiant, motDePasse, idProfile FROM utilisateur WHERE id = ?";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
@@ -37,7 +37,7 @@ public class UtilisateurDao implements Dao<Utilisateur> {
             if (resultSet.next()) {
                 var utilisateur = new Utilisateur(
                         id,
-                        resultSet.getString("nom"),
+                        resultSet.getString("identifiant"),
                         resultSet.getString("motDePasse")
                         );
                 return Optional.of(utilisateur);
@@ -53,9 +53,9 @@ public class UtilisateurDao implements Dao<Utilisateur> {
     public void update(Utilisateur utilisateur) {
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "UPDATE utilisateur SET nom=?, motDePasse=? where id=?";
+            String sql = "UPDATE utilisateur SET identifiant=?, motDePasse=? where id=?";
             var statement = connection.prepareStatement(sql);
-            statement.setString(1, utilisateur.nom());
+            statement.setString(1, utilisateur.identifiant());
             statement.setString(2, utilisateur.motDePasse());
             statement.setInt(3, utilisateur.id());
             statement.executeUpdate();
@@ -84,12 +84,12 @@ public class UtilisateurDao implements Dao<Utilisateur> {
         List<Utilisateur> utilisateurs = new ArrayList<>();
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "SELECT id, nom, motDePasse, idProfile FROM utilisateur";
+            String sql = "SELECT id, identifiant, motDePasse, idProfile FROM utilisateur";
             var statement = connection.createStatement();
             var resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
                 var id = resultSet.getInt("id");
-                var name = resultSet.getString("nom");
+                var name = resultSet.getString("identifiant");
                 var password = resultSet.getString("motDePasse");
                 utilisateurs.add(new Utilisateur(id, name, password));
             }

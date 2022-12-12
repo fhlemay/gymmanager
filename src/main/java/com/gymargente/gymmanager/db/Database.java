@@ -1,6 +1,7 @@
 package com.gymargente.gymmanager.db;
 
-import java.io.IOException;
+import java.io.*;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ import java.util.Properties;
  */
 public class Database {
     private static final Database db = new Database();
+    private static final boolean DEMO = true;
     private Connection connection;
     private String server, port, database, user, password;
 

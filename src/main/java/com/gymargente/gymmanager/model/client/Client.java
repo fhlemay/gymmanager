@@ -4,14 +4,15 @@ import java.util.Date;
 
 public record Client(int id,
                      String nom,
+                     String prenom,
                      Date dateAdhesion,
                      int heureSpecialiste,
                      int heureReservee) {
 
-    public Client(String nom,
+    public Client(String nom, String prenom,
                   Date dateAdhesion,
                   int heureSpecialiste,
                   int heureReservee){
-        this(0, nom, dateAdhesion, heureSpecialiste, heureReservee);
+        this(0, nom, prenom, dateAdhesion, heureSpecialiste, heureReservee);
     }
 }

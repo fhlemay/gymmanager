@@ -1,4 +1,4 @@
-package com.gymargente.gymmanager.model.client;
+package com.gymargente.gymmanager.model.plan.periode;
 
 import com.gymargente.gymmanager.db.Dao;
 import com.gymargente.gymmanager.db.DaoException;
@@ -10,18 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ClientDao implements Dao<Client> {
+public class PeriodeDao implements Dao<Periode> {
     @Override
-    public void create(Client client) {
-        String sql = "INSERT INTO client (nom, prenom, dateAdhesion, heureSpecialiste, heureReservee) VALUES (?, ?, ?, ?, ?)";
+    public void create(Periode periode) {
+        String sql = "INSERT INTO periode (nom, dureeMois) VALUES (?, ?)";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
-            statement.setString(1, client.nom());
-            statement.setString(2, client.prenom());
-            statement.setDate(3, new java.sql.Date(client.dateAdhesion().getTime()));
-            statement.setInt(4, client.heureSpecialiste());
-            statement.setInt(5, client.heureReservee());
+            statement.setString(1, periode.nom());
+            statement.setInt(2, periode.dureeMois());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -30,87 +27,76 @@ public class ClientDao implements Dao<Client> {
     }
 
     @Override
-    public Optional<Client> findById(int id) {
-        String sql = "SELECT nom, prenom, dateAdhesion, heureSpecialiste, heureReservee FROM client WHERE id = ?";
+    public Optional<Periode> findById(int id) {
+        String sql = "SELECT nom, dureeMois FROM periode WHERE id = ?";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             var resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                var client = new Client(
+                return Optional.of(new Periode(
                         id,
                         resultSet.getString("nom"),
-                        resultSet.getString("prenom"),
-                        resultSet.getDate("dateConsultation"),
-                        resultSet.getInt("heureSpecialiste"),
-                        resultSet.getInt("heureReservee")
-                );
-                return Optional.of(client);
-            }
-            statement.close();
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-        return Optional.empty();
-
-    }
-
-    @Override
-    public void update(Client client) {
-        Connection connection = Database.getInstance().getConnection();
-        try {
-            String sql = "UPDATE client SET nom=?, prenom=?, dateAdhesion=?, heureSpecialiste=?, heureReservee=? where id=?";
-            var statement = connection.prepareStatement(sql);
-            statement.setString(1, client.nom());
-            statement.setString(2, client.prenom());
-            statement.setDate(3, new java.sql.Date(client.dateAdhesion().getTime()));
-            statement.setInt(4, client.heureSpecialiste());
-            statement.setInt(5, client.heureReservee());
-            statement.setInt(6, client.id());
-            statement.executeUpdate();
-            statement.close();
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-    }
-
-    @Override
-    public void delete(Client client) {
-        Connection connection = Database.getInstance().getConnection();
-        try {
-            String sql = "DELETE FROM client WHERE id = ?";
-            var statement = connection.prepareStatement(sql);
-            statement.setInt(1, client.id());
-            statement.executeUpdate();
-            statement.close();
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-    }
-
-    @Override
-    public List<Client> getAll() {
-        List<Client> clients = new ArrayList<>();
-        Connection connection = Database.getInstance().getConnection();
-        try {
-            String sql = "SELECT id, nom, prenom, dateAdhesion, heureSpecialiste, heureReservee FROM client";
-            var statement = connection.createStatement();
-            var resultSet = statement.executeQuery(sql);
-            while (resultSet.next()) {
-                clients.add(new Client (
-                        resultSet.getInt("id"),
-                        resultSet.getString("nom"),
-                        resultSet.getString("prenom"),
-                        new java.util.Date(resultSet.getTimestamp("dateAdhesion").getTime()),
-                        resultSet.getInt("heureSpecialiste"),
-                        resultSet.getInt("heureReservee")
+                        resultSet.getInt("dureeMois")
                 ));
             }
             statement.close();
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return clients;
+        return Optional.empty();
+    }
+
+    @Override
+    public void update(Periode periode) {
+        Connection connection = Database.getInstance().getConnection();
+        try {
+            String sql = "UPDATE periode SET nom=?, dureeMois=? WHERE id=?";
+            var statement = connection.prepareStatement(sql);
+            statement.setString(1, periode.nom());
+            statement.setInt(2, periode.dureeMois());
+            statement.setInt(3, periode.id());
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public void delete(Periode periode) {
+        Connection connection = Database.getInstance().getConnection();
+        try {
+            String sql = "DELETE FROM periode WHERE id = ?";
+            var statement = connection.prepareStatement(sql);
+            statement.setInt(1, periode.id());
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<Periode> getAll() {
+        List<Periode> periodes = new ArrayList<>();
+        Connection connection = Database.getInstance().getConnection();
+        try {
+            String sql = "SELECT id, nom FROM periode";
+            var statement = connection.createStatement();
+            var resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                periodes.add(new Periode(
+                        resultSet.getInt("id"),
+                        resultSet.getString("nom"),
+                        resultSet.getInt("dureeMois")
+                ));
+            }
+            statement.close();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return periodes;
     }
 }

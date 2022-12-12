@@ -25,15 +25,15 @@ public class AppSansFx {
         }
         System.out.println("Base de données connectée.");
 
-        Dao<Utilisateur> utilisateurDao = new UtilisateurDao();
-
-        List<Utilisateur> utilisateurs = utilisateurDao.getAll();
-        utilisateurs.forEach(System.out::println);
+//        Dao<Utilisateur> utilisateurDao = new UtilisateurDao();
+//
+//        List<Utilisateur> utilisateurs = utilisateurDao.getAll();
+//        utilisateurs.forEach(System.out::println);
 
 //        for (int i = 0; i<10; i++) {
 //            utilisateurDao.create(new Utilisateur("Bob", "motdepassebidon", 0));
 //        }
-        var utilisateurOpt = utilisateurDao.findById(7);
+//        var utilisateurOpt = utilisateurDao.findById(7);
 
 //        if(utilisateurOpt.isPresent()){
 //            var utilisateur = new Utilisateur(
