@@ -62,7 +62,7 @@ public class GymManager extends Application {
         if(user.isPresent()){
             loggedUser = user.get();
             gotoMain();
-            System.out.println(loggedUser);
+//            System.out.println(loggedUser);
             return true;
         } else {
             return false;
@@ -113,6 +113,7 @@ public class GymManager extends Application {
         root.getChildren().clear();
         root.getChildren().addAll(page);
         stage.sizeToScene();
+        stage.setResizable(false);
 
         return (Initializable) loader.getController();
     }

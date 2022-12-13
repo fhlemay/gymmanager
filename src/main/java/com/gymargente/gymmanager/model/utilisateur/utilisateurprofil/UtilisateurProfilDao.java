@@ -28,19 +28,22 @@ public class UtilisateurProfilDao implements Dao<UtilisateurProfil> {
 
     @Override
     public Optional<UtilisateurProfil> findById(int id) {
-        String sql = "SELECT idUtilisateur, idProfil FROM utilisateurProfil WHERE id = ?";
+        return Optional.empty();
+    }
+
+    // Retourne les profilId associés à un utilisateur.
+    public Optional<List<Integer>> getProfilIdsfor(int userId) {
+        String sql = "SELECT idProfil FROM utilisateurProfil WHERE idUtilisateur = ?";
         Connection connection = Database.getInstance().getConnection();
+        List<Integer> profilsId = new ArrayList<>();
         try {
             var statement = connection.prepareStatement(sql);
-            statement.setInt(1, id);
+            statement.setInt(1, userId);
             var resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                var utilisateurProfil = new UtilisateurProfil(
-                        id,
-                        resultSet.getInt("idUtilisateur"),
-                        resultSet.getInt("idProfil")
-                );
-                return Optional.of(utilisateurProfil);
+            while (resultSet.next()) {
+                profilsId.add(resultSet.getInt("idProfil"));
+
+                return Optional.of(profilsId);
             }
             statement.close();
         } catch (SQLException e) {

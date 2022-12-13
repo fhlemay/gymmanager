@@ -113,4 +113,31 @@ public class ClientDao implements Dao<Client> {
         }
         return clients;
     }
+
+    public List<Client> getClientsByTextSearch(String textToSearch) {
+        List<Client> clients = new ArrayList<>();
+        Connection connection = Database.getInstance().getConnection();
+        try {
+            String sql_header = "SELECT id, nom, prenom, dateAdhesion, heureSpecialiste, heureReservee FROM client ";
+            String sqlSearch = "WHERE CONCAT_WS(\" \", nom, prenom) LIKE ?"; // concat pour chercher sur plusieurs colonnes
+            String sql = sql_header+sqlSearch;
+            var statement = connection.prepareStatement(sql);
+            statement.setString(1, "%"+textToSearch+"%");
+            var resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                clients.add(new Client (
+                        resultSet.getInt("id"),
+                        resultSet.getString("nom"),
+                        resultSet.getString("prenom"),
+                        new java.util.Date(resultSet.getTimestamp("dateAdhesion").getTime()),
+                        resultSet.getInt("heureSpecialiste"),
+                        resultSet.getInt("heureReservee")
+                ));
+            }
+            statement.close();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return clients;
+    }
 }
