@@ -13,7 +13,8 @@ public class UtilisateurDao implements Dao<Utilisateur> {
 
     @Override
     public void create(Utilisateur utilisateur) {
-        String sql = "INSERT INTO utilisateur (identifiant, motDePasse, idProfile) VALUES (?, ?)";
+        // TODO : create utilisateur : on ne veut pas 2 identifiant pareils.
+        String sql = "INSERT INTO utilisateur (identifiant, motDePasse) VALUES (?, ?)";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
@@ -28,7 +29,7 @@ public class UtilisateurDao implements Dao<Utilisateur> {
 
     @Override
     public Optional<Utilisateur> findById(int id) {
-        String sql = "SELECT identifiant, motDePasse, idProfile FROM utilisateur WHERE id = ?";
+        String sql = "SELECT identifiant, motDePasse FROM utilisateur WHERE id = ?";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
@@ -40,6 +41,28 @@ public class UtilisateurDao implements Dao<Utilisateur> {
                         resultSet.getString("identifiant"),
                         resultSet.getString("motDePasse")
                         );
+                return Optional.of(utilisateur);
+            }
+            statement.close();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Utilisateur> findByIdentifiant(String identifiant) {
+        String sql = "SELECT id, identifiant, motDePasse FROM utilisateur WHERE identifiant = ?";
+        Connection connection = Database.getInstance().getConnection();
+        try {
+            var statement = connection.prepareStatement(sql);
+            statement.setString(1, identifiant);
+            var resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                var utilisateur = new Utilisateur(
+                        resultSet.getInt("id"),
+                        resultSet.getString("identifiant"),
+                        resultSet.getString("motDePasse")
+                );
                 return Optional.of(utilisateur);
             }
             statement.close();
@@ -84,7 +107,7 @@ public class UtilisateurDao implements Dao<Utilisateur> {
         List<Utilisateur> utilisateurs = new ArrayList<>();
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "SELECT id, identifiant, motDePasse, idProfile FROM utilisateur";
+            String sql = "SELECT id, identifiant, motDePasse FROM utilisateur";
             var statement = connection.createStatement();
             var resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
