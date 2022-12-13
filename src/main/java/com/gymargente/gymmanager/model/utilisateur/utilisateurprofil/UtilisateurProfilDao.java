@@ -33,6 +33,7 @@ public class UtilisateurProfilDao implements Dao<UtilisateurProfil> {
 
     // Retourne les profilId associés à un utilisateur.
     public Optional<List<Integer>> getProfilIdsfor(int userId) {
+
         String sql = "SELECT idProfil FROM utilisateurProfil WHERE idUtilisateur = ?";
         Connection connection = Database.getInstance().getConnection();
         List<Integer> profilsId = new ArrayList<>();
@@ -40,16 +41,17 @@ public class UtilisateurProfilDao implements Dao<UtilisateurProfil> {
             var statement = connection.prepareStatement(sql);
             statement.setInt(1, userId);
             var resultSet = statement.executeQuery();
+
+            if(!resultSet.isBeforeFirst())
+                return Optional.empty(); // pas de donnees
             while (resultSet.next()) {
                 profilsId.add(resultSet.getInt("idProfil"));
-
-                return Optional.of(profilsId);
             }
             statement.close();
+            return Optional.of(profilsId);
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return Optional.empty();
     }
 
     @Override
