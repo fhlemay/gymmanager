@@ -2,15 +2,17 @@ package com.gymargente.gymmanager.controller;
 
 import com.gymargente.gymmanager.model.client.Client;
 import com.gymargente.gymmanager.model.client.ClientCellFactory;
+import com.gymargente.gymmanager.model.client.ClientController;
 import com.gymargente.gymmanager.model.client.ClientService;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,32 +22,31 @@ public class GestionCompteController implements Initializable {
     private ListView<Client> lvClients;
     @FXML
     private TextField txtSearchClient;
-    @FXML
-    private Label lblClientInfo;
+    @FXML private ClientController clientController;
 
     private ObservableList<Client> clientsList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        Platform.runLater(() -> btnLogin.requestFocus()); // Le focus est initialement sur le bouton.
+
+        txtSearchClient.clear();
+        Platform.runLater(() -> txtSearchClient.requestFocus()); // Mettre le focus sur un controle.
 
         clientsList = ClientService.getAllClients();
 
         lvClients.setCellFactory(new ClientCellFactory());
         lvClients.setItems(clientsList);
-        lvClients.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        lvClients.getSelectionModel().setSelectionMode(SelectionMode.SINGLE); //un seul client peut etre selectionne
         lvClients.getSelectionModel().selectedItemProperty().addListener(
                 (observableValue, oldClient, newClient) -> {
                     if(newClient != null)
-                        lblClientInfo.setText(newClient.prenom() + " " + newClient.nom());
+                        clientController.setClient(newClient);
                 });
-        Client selectedClient = lvClients.getSelectionModel().getSelectedItem();
+        clientController.refreshParent().addListener((observable, oldValue, newValue) -> this.initialize(location, resources));
     }
 
     @FXML
     void handleTextChange(KeyEvent event) {
         clientsList.setAll(ClientService.getClientsByText(txtSearchClient.getText()));
     }
-
-
 }

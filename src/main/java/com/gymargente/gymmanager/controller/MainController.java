@@ -44,7 +44,7 @@ public class MainController extends AnchorPane implements Initializable {
     private void giveAccessByUserProfil() {
         int userId = application.getLoggedUser().id();
         List<String> userProfils = UtilisateurService.getProfiles(userId);
-        System.out.println(userProfils);
+//        System.out.println(userProfils);
 
         // Pour la sélection du tab.
         SingleSelectionModel<Tab> selectionModel = tabPaneAccessControl.getSelectionModel();

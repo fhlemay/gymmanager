@@ -13,7 +13,7 @@ import java.util.Optional;
 public class ClientDao implements Dao<Client> {
     @Override
     public void create(Client client) {
-        String sql = "INSERT INTO client (nom, prenom, courriel, telephone, dateAdhesion, heureSpecialiste, heureReservee) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO client (nom, prenom, courriel, telephone, dateAdhesion) VALUES (?, ?, ?, ?, ?)";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
@@ -22,8 +22,6 @@ public class ClientDao implements Dao<Client> {
             statement.setString(3, client.courriel());
             statement.setString(4, client.telephone());
             statement.setDate(5, new java.sql.Date(client.dateAdhesion().getTime()));
-            statement.setInt(6, client.heureSpecialiste());
-            statement.setInt(7, client.heureReservee());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -33,7 +31,7 @@ public class ClientDao implements Dao<Client> {
 
     @Override
     public Optional<Client> findById(int id) {
-        String sql = "SELECT nom, prenom, courriel, telephone, dateAdhesion, heureSpecialiste, heureReservee FROM client WHERE id = ?";
+        String sql = "SELECT nom, prenom, courriel, telephone, dateAdhesion FROM client WHERE id = ?";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
@@ -46,9 +44,7 @@ public class ClientDao implements Dao<Client> {
                         resultSet.getString("prenom"),
                         resultSet.getString("courriel"),
                         resultSet.getString("telephone"),
-                        resultSet.getDate("dateConsultation"),
-                        resultSet.getInt("heureSpecialiste"),
-                        resultSet.getInt("heureReservee")
+                        resultSet.getDate("dateConsultation")
                 );
                 return Optional.of(client);
             }
@@ -64,16 +60,14 @@ public class ClientDao implements Dao<Client> {
     public void update(Client client) {
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "UPDATE client SET nom=?, prenom=?, courriel=?, telephone=?, dateAdhesion=?, heureSpecialiste=?, heureReservee=? where id=?";
+            String sql = "UPDATE client SET nom=?, prenom=?, courriel=?, telephone=?, dateAdhesion=? where id=?";
             var statement = connection.prepareStatement(sql);
             statement.setString(1, client.nom());
             statement.setString(2, client.prenom());
             statement.setString(3, client.courriel());
             statement.setString(4, client.telephone());
             statement.setDate(5, new java.sql.Date(client.dateAdhesion().getTime()));
-            statement.setInt(6, client.heureSpecialiste());
-            statement.setInt(7, client.heureReservee());
-            statement.setInt(8, client.id());
+            statement.setInt(6, client.id());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -100,7 +94,7 @@ public class ClientDao implements Dao<Client> {
         List<Client> clients = new ArrayList<>();
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "SELECT nom, prenom, courriel, telephone, dateAdhesion, heureSpecialiste, heureReservee FROM client";
+            String sql = "SELECT id, nom, prenom, courriel, telephone, dateAdhesion FROM client";
             var statement = connection.createStatement();
             var resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
@@ -110,9 +104,7 @@ public class ClientDao implements Dao<Client> {
                         resultSet.getString("prenom"),
                         resultSet.getString("courriel"),
                         resultSet.getString("telephone"),
-                        new java.util.Date(resultSet.getTimestamp("dateAdhesion").getTime()),
-                        resultSet.getInt("heureSpecialiste"),
-                        resultSet.getInt("heureReservee")
+                        new java.util.Date(resultSet.getTimestamp("dateAdhesion").getTime())
                 ));
             }
             statement.close();
@@ -126,8 +118,8 @@ public class ClientDao implements Dao<Client> {
         List<Client> clients = new ArrayList<>();
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql_header = "SELECT nom, prenom, courriel, telephone, dateAdhesion, heureSpecialiste, heureReservee FROM client ";
-            String sqlSearch = "WHERE CONCAT_WS(\" \", nom, prenom, courriel, telephones) LIKE ?"; // concat pour chercher sur plusieurs colonnes
+            String sql_header = "SELECT id, nom, prenom, courriel, telephone, dateAdhesion FROM client ";
+            String sqlSearch = "WHERE CONCAT_WS(\" \", nom, prenom, courriel, telephone) LIKE ?"; // concat pour chercher sur plusieurs colonnes
             String sql = sql_header+sqlSearch;
             var statement = connection.prepareStatement(sql);
             statement.setString(1, "%"+textToSearch+"%");
@@ -139,9 +131,7 @@ public class ClientDao implements Dao<Client> {
                         resultSet.getString("prenom"),
                         resultSet.getString("courriel"),
                         resultSet.getString("telephone"),
-                        new java.util.Date(resultSet.getTimestamp("dateAdhesion").getTime()),
-                        resultSet.getInt("heureSpecialiste"),
-                        resultSet.getInt("heureReservee")
+                        new java.util.Date(resultSet.getTimestamp("dateAdhesion").getTime())
                 ));
             }
             statement.close();

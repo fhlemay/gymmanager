@@ -7,15 +7,11 @@ public record Client (int id,
                      String prenom,
                      String courriel,
                      String telephone,
-                     Date dateAdhesion,
-                     int heureSpecialiste,
-                     int heureReservee) {
+                     Date dateAdhesion) {
 
     public Client(String nom, String prenom,
                   String courriel, String telephone,
-                  Date dateAdhesion,
-                  int heureSpecialiste,
-                  int heureReservee){
-        this(0, nom, prenom, courriel, telephone, dateAdhesion, heureSpecialiste, heureReservee);
+                  Date dateAdhesion){
+        this(0, nom, prenom, courriel, telephone, dateAdhesion);
     }
 }

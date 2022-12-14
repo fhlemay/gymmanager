@@ -32,7 +32,7 @@ public class UtilisateurService {
         var profilsId = utilisateurProfileDao.getProfilIdsfor(userId);
 
         if(profilsId.isPresent()){
-            System.out.println("UtlisateurService " + profilsId.get());
+//            System.out.println("UtlisateurService " + profilsId.get());
             for(Integer profilId : profilsId.get()) {
                 var profilName = profilDao.findById(profilId);
                 profilName.ifPresent(value -> profil.add(value.nom()));

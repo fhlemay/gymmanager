@@ -21,8 +21,8 @@ public class ClientCellFactory implements Callback<ListView<Client>, ListCell<Cl
                 if(empty || client == null) {
                     setText(null);
                 } else {
-                    DateFormat bla = new SimpleDateFormat("d MMMM yyyy");
-                    setText(client.nom() + ", " + client.prenom() + " date d'adhésion : " + bla.format(client.dateAdhesion()));
+//                    DateFormat bla = new SimpleDateFormat("d MMMM yyyy");
+                    setText(client.nom() + ", " + client.prenom() + " " + client.courriel() + " " + client.telephone());
                 }
             }
         };
