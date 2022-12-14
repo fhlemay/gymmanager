@@ -68,7 +68,6 @@ public class MainController extends AnchorPane implements Initializable {
     }
     @FXML
     void handleDeconnecter(ActionEvent event) {
-        System.out.println("On veut déconnecter");
         application.userLogout();
     }
 }

@@ -13,7 +13,6 @@ import java.util.Properties;
  */
 public class Database {
     private static final Database db = new Database();
-    private static final boolean DEMO = true;
     private Connection connection;
     private String server, port, database, user, password;
 
