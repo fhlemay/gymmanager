@@ -10,8 +10,8 @@
    <children>
       <Button layoutX="5.0" layoutY="159.0" mnemonicParsing="false" onAction="#handleAjouterBlocHeures" prefHeight="25.0" prefWidth="174.0" text="Ajouter un bloc d'heures" />
       <Label layoutX="14.0" layoutY="2.0" text="Heures de consultation" />
-      <Label layoutX="14.0" layoutY="53.0" text="Heures réservées :" />
-      <Label layoutX="15.0" layoutY="31.0" text="Heures disponibles :" />
+      <Label layoutX="4.0" layoutY="52.0" text="Heures réservées :" />
+      <Label layoutX="4.0" layoutY="31.0" text="Heures disponibles :" />
       <Label fx:id="lblReservees" layoutX="139.0" layoutY="52.0" text="# réservées" />
       <Label fx:id="lblDisponibles" layoutX="144.0" layoutY="32.0" text="# disponibles" />
       <Separator layoutX="14.0" layoutY="22.0" prefWidth="200.0" />

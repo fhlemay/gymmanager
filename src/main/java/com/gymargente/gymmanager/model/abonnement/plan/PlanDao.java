@@ -30,20 +30,20 @@ public class PlanDao implements Dao<Plan> {
 
             if (resultSet.next()) {
 
-                int parentId = resultSet.getInt("idParent");
+                int parentId = resultSet.getInt("parent"); // Lorsque int null dans la db, resultatSet est 0.
 
-                if (parentId != 0) { // il y a un parent.
+                if (parentId != 0) { // Il y a un parent.
 
                     Plan plan = new Plan(id, findById(parentId).get(), // recursion pour trouver le parent.
                             resultSet.getString("acces"),
-                            resultSet.getString("period"),
+                            resultSet.getString("periode"),
                             resultSet.getInt("prix"));
 
                     return Optional.of(plan);
                 }
                 Plan plan = new Plan(id, null,
                         resultSet.getString("acces"),
-                        resultSet.getString("period"),
+                        resultSet.getString("periode"),
                         resultSet.getInt("prix"));
                 return Optional.of(plan);
             }
@@ -70,9 +70,9 @@ public class PlanDao implements Dao<Plan> {
             var statement = connection.prepareStatement(sql);
             var resultSet = statement.executeQuery();
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
 
-                int parentId = resultSet.getInt("idParent");
+                int parentId = resultSet.getInt("parent");
                 Plan plan;
 
                 if (parentId != 0) { // il y a un parent.
@@ -81,7 +81,7 @@ public class PlanDao implements Dao<Plan> {
                             resultSet.getInt("id"),
                             findById(parentId).get(), // on cherche le parent.
                             resultSet.getString("acces"),
-                            resultSet.getString("period"),
+                            resultSet.getString("periode"),
                             resultSet.getInt("prix"));
 
                 } else {
@@ -89,7 +89,7 @@ public class PlanDao implements Dao<Plan> {
                             resultSet.getInt("id"),
                             null,
                             resultSet.getString("acces"),
-                            resultSet.getString("period"),
+                            resultSet.getString("periode"),
                             resultSet.getInt("prix"));
                 }
                 list.add(plan);

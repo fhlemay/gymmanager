@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="265.0" prefWidth="295.0" xmlns="http://javafx.com/javafx/19">
-    <Label layoutX="14.0" layoutY="6.0" text="Plans"/>
-    <TreeTableView fx:id="tvPlans" layoutX="14.0" layoutY="33.0" prefHeight="200.0" prefWidth="266.0">
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="286.0" prefWidth="496.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gymargente.gymmanager.controller.PlanController">
+    <Label layoutX="14.0" layoutY="6.0" text="Plans et options" />
+    <TreeTableView fx:id="treePlans" layoutX="14.0" layoutY="33.0" prefHeight="200.0" prefWidth="463.0">
         <columns>
-            <TreeTableColumn prefWidth="75.0" text="C1"/>
-            <TreeTableColumn prefWidth="75.0" text="C2"/>
-            <TreeTableColumn prefWidth="75.0" text="C3"/>
+            <TreeTableColumn fx:id="colAcces" prefWidth="240.0" text="Accès" />
+            <TreeTableColumn fx:id="colPeriode" prefWidth="120.0" text="Période" />
+            <TreeTableColumn fx:id="colPrix" prefWidth="94.0" text="Prix" />
         </columns>
     </TreeTableView>
+   <Button layoutX="14.0" layoutY="240.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="111.0" text="Acheter" />
 </AnchorPane>

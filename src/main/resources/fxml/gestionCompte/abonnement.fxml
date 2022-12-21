@@ -4,11 +4,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="123.0" prefWidth="295.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="123.0" prefWidth="295.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gymargente.gymmanager.controller.AbonnementController">
    <children>
-      <Button fx:id="btnSave" layoutX="69.0" layoutY="149.0" mnemonicParsing="false" onAction="#handleSaveModification" text="Sauvegarder" visible="false" />
-      <Button fx:id="btnInsert" layoutX="79.0" layoutY="159.0" mnemonicParsing="false" onAction="#handleInsert" text="Enregistrer" visible="false" />
-      <Button fx:id="btnModHeuresSpecialiste" layoutX="15.0" layoutY="87.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="152.0" text="Ajouter abonnement" />
+      <Button layoutX="15.0" layoutY="87.0" mnemonicParsing="false" onAction="#handleAjouterAbonnement" prefHeight="25.0" prefWidth="152.0" text="Ajouter abonnement" />
       <Label layoutX="14.0" layoutY="6.0" text="Abonnements" />
    </children>
 </AnchorPane>

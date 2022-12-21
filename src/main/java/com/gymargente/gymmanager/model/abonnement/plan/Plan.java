@@ -1,7 +1,7 @@
 package com.gymargente.gymmanager.model.abonnement.plan;
 
 public record Plan(int id,
-                   Plan Parent,
+                   Plan parent,
                    String acces,
                    String periode,
                    int prix) {
