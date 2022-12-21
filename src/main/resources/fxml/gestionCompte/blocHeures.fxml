@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="193.0" prefWidth="295.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gymargente.gymmanager.controller.BlocHeuresController">
+   <children>
+      <Button layoutX="5.0" layoutY="159.0" mnemonicParsing="false" onAction="#handleAjouterBlocHeures" prefHeight="25.0" prefWidth="174.0" text="Ajouter un bloc d'heures" />
+      <Label layoutX="14.0" layoutY="2.0" text="Heures de consultation" />
+      <Label layoutX="14.0" layoutY="53.0" text="Heures réservées :" />
+      <Label layoutX="15.0" layoutY="31.0" text="Heures disponibles :" />
+      <Label fx:id="lblReservees" layoutX="139.0" layoutY="52.0" text="# réservées" />
+      <Label fx:id="lblDisponibles" layoutX="144.0" layoutY="32.0" text="# disponibles" />
+      <Separator layoutX="14.0" layoutY="22.0" prefWidth="200.0" />
+      <ListView fx:id="lvBlocHeures" layoutX="2.0" layoutY="96.0" prefHeight="60.0" prefWidth="289.0" />
+      <Button fx:id="btnSupprimer" layoutX="184.0" layoutY="159.0" mnemonicParsing="false" onAction="#handleSupprimerBlocHeures" prefHeight="25.0" prefWidth="99.0" text="Rembourser" />
+      <Label layoutX="8.0" layoutY="79.0" text="Blocs d'heures achetés" />
+   </children>
+</AnchorPane>

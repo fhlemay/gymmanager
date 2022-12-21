@@ -16,6 +16,8 @@ public class MainController extends AnchorPane implements Initializable {
 
     private GymManager application;
     @FXML
+    private MenuBar menuUtilisateur;
+    @FXML
     private TabPane tabPaneAccessControl;
     @FXML
     private Tab tabAdministration;
@@ -27,7 +29,7 @@ public class MainController extends AnchorPane implements Initializable {
     private Tab tabGestionCompte;
 
     public void setApp(GymManager application) {
-        if (application == null) System.out.println("Application est nulle. Pourqoi?");
+        if (application == null) System.out.println("Application est nulle. Pourquoi?");
         this.application = application;
 
         giveAccessByUserProfil();
@@ -43,6 +45,9 @@ public class MainController extends AnchorPane implements Initializable {
 
     private void giveAccessByUserProfil() {
         int userId = application.getLoggedUser().id();
+
+        String credentials = application.getLoggedUser().identifiant() + " >";
+
         List<String> userProfils = UtilisateurService.getProfiles(userId);
 //        System.out.println(userProfils);
 
@@ -54,17 +59,22 @@ public class MainController extends AnchorPane implements Initializable {
                 case "GESTIONNAIRE":
                     tabGestionCompte.setDisable(false);
                     selectionModel.select(tabGestionCompte);
+                    credentials += " : gestionnaire";
                     break;
                 case "SPECIALISTE":
                     tabConsultation.setDisable(false);
                     selectionModel.select(tabConsultation);
+                    credentials += " : spécialiste";
                     break;
                 case "ADMINISTRATEUR":
                     tabAdministration.setDisable(false);
                     selectionModel.select(tabAdministration);
+                    credentials += " : administrateur/trice";
                     break;
             }
         }
+
+        menuUtilisateur.getMenus().get(0).setText(credentials); // Nom et profils de l'utilisateur dans le menu.
     }
     @FXML
     void handleDeconnecter(ActionEvent event) {

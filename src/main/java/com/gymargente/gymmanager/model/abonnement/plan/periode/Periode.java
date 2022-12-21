@@ -1,4 +1,4 @@
-package com.gymargente.gymmanager.model.plan.periode;
+package com.gymargente.gymmanager.model.abonnement.plan.periode;
 
 public record Periode(int id, String nom, int dureeMois) {
 

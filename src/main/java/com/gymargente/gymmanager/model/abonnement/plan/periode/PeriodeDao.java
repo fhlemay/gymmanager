@@ -1,4 +1,4 @@
-package com.gymargente.gymmanager.model.plan;
+package com.gymargente.gymmanager.model.abonnement.plan.periode;
 
 import com.gymargente.gymmanager.db.Dao;
 import com.gymargente.gymmanager.db.DaoException;
@@ -10,17 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PlanDao implements Dao<Plan> {
+public class PeriodeDao implements Dao<Periode> {
     @Override
-    public void create(Plan plan) {
-        String sql = "INSERT INTO plan (idTypeAcces, idPeriode, option, prix) VALUES (?, ?, ?, ?)";
+    public void create(Periode periode) {
+        String sql = "INSERT INTO periode (nom, dureeMois) VALUES (?, ?)";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
-            statement.setInt(1, plan.idTypeAcces());
-            statement.setInt(2, plan.idPeriode());
-            statement.setBoolean(3, plan.option());
-            statement.setInt(4, plan.prix());
+            statement.setString(1, periode.nom());
+            statement.setInt(2, periode.dureeMois());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -29,20 +27,18 @@ public class PlanDao implements Dao<Plan> {
     }
 
     @Override
-    public Optional<Plan> findById(int id) {
-        String sql = "SELECT idTypeAcces, idPeriode, option, prix FROM plan WHERE id = ?";
+    public Optional<Periode> findById(int id) {
+        String sql = "SELECT nom, dureeMois FROM periode WHERE id = ?";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             var resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return Optional.of(new Plan(
+                return Optional.of(new Periode(
                         id,
-                        resultSet.getInt("idTypeAcces"),
-                        resultSet.getInt("idPeriode"),
-                        resultSet.getBoolean("option"),
-                        resultSet.getInt("prix")
+                        resultSet.getString("nom"),
+                        resultSet.getInt("dureeMois")
                 ));
             }
             statement.close();
@@ -53,16 +49,14 @@ public class PlanDao implements Dao<Plan> {
     }
 
     @Override
-    public void update(Plan plan) {
+    public void update(Periode periode) {
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "UPDATE plan SET idTypeAcces=?, idPeriode=?, option=?, prix=? WHERE id=?";
+            String sql = "UPDATE periode SET nom=?, dureeMois=? WHERE id=?";
             var statement = connection.prepareStatement(sql);
-            statement.setInt(1, plan.idTypeAcces());
-            statement.setInt(2, plan.idPeriode());
-            statement.setBoolean(3, plan.option());
-            statement.setInt(4, plan.prix());
-            statement.setInt(5, plan.id());
+            statement.setString(1, periode.nom());
+            statement.setInt(2, periode.dureeMois());
+            statement.setInt(3, periode.id());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -71,12 +65,12 @@ public class PlanDao implements Dao<Plan> {
     }
 
     @Override
-    public void delete(Plan plan) {
+    public void delete(Periode periode) {
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "DELETE FROM plan WHERE id = ?";
+            String sql = "DELETE FROM periode WHERE id = ?";
             var statement = connection.prepareStatement(sql);
-            statement.setInt(1, plan.id());
+            statement.setInt(1, periode.id());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -85,26 +79,24 @@ public class PlanDao implements Dao<Plan> {
     }
 
     @Override
-    public List<Plan> getAll() {
-        List<Plan> plans = new ArrayList<>();
+    public List<Periode> getAll() {
+        List<Periode> periodes = new ArrayList<>();
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "SELECT id, idTypeAcces, idPeriode, option, prix FROM plan FROM plan";
+            String sql = "SELECT id, nom FROM periode";
             var statement = connection.createStatement();
             var resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
-                plans.add(new Plan(
+                periodes.add(new Periode(
                         resultSet.getInt("id"),
-                        resultSet.getInt("idTypeAcces"),
-                        resultSet.getInt("idPeriode"),
-                        resultSet.getBoolean("option"),
-                        resultSet.getInt("prix")
+                        resultSet.getString("nom"),
+                        resultSet.getInt("dureeMois")
                 ));
             }
             statement.close();
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return plans;
+        return periodes;
     }
 }

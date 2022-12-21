@@ -5,10 +5,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -28,6 +27,7 @@ public class ClientController implements Initializable {
     @FXML private TextField txtNom;
     @FXML private TextField txtPrenom;
     @FXML private TextField txtTelephone;
+    @FXML private Label lblMontantDu;
 
     private final BooleanProperty refreshParent = new SimpleBooleanProperty();
     private Client client;
@@ -43,7 +43,8 @@ public class ClientController implements Initializable {
         txtPrenom.setText(client.prenom());
         txtCourriel.setText(client.courriel());
         txtTelephone.setText(client.telephone());
-        dateAdhesion.setValue(client.dateAdhesion().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        dateAdhesion.setValue(client.dateAdhesion().toLocalDate());
+        lblMontantDu.setText(client.montantDu().toString());
     }
 
     @FXML
@@ -102,7 +103,8 @@ public class ClientController implements Initializable {
                 txtPrenom.getText(),
                 txtCourriel.getText(),
                 txtTelephone.getText(),
-                Date.from(dateAdhesion.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()) // yeurk!
+                Date.valueOf(dateAdhesion.getValue()),
+                this.client.montantDu()
         );
 
         ClientService.updateClient(modClient);
@@ -132,7 +134,8 @@ public class ClientController implements Initializable {
                 txtPrenom.getText(),
                 txtCourriel.getText(),
                 txtTelephone.getText(),
-                Date.from(dateAdhesion.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()) // yeurk!
+                Date.valueOf(dateAdhesion.getValue()), // yeurk!
+                new BigDecimal("0.0")
         );
 
         ClientService.addClient(clientToAdd);
@@ -149,6 +152,16 @@ public class ClientController implements Initializable {
         txtCourriel.setDisable(true);
         txtTelephone.setDisable(true);
         dateAdhesion.setDisable(true);
+    }
+
+    @FXML
+    public void handlePayer(){
+        Alert message = new Alert(Alert.AlertType.INFORMATION);
+        message.setTitle("On va payer ici...");
+        message.setHeaderText("Transaction à développer.");
+        message.setContentText("On créer une transaction puis on soustrait la somme payée du montant dû.");
+
+        message.showAndWait();
     }
 
     private void cleanFields() {

@@ -1,4 +1,4 @@
-package com.gymargente.gymmanager.model.plan.periode;
+package com.gymargente.gymmanager.model.abonnement.plan.acces;
 
 import com.gymargente.gymmanager.db.Dao;
 import com.gymargente.gymmanager.db.DaoException;
@@ -10,15 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PeriodeDao implements Dao<Periode> {
+public class AccesDao implements Dao<Acces> {
     @Override
-    public void create(Periode periode) {
-        String sql = "INSERT INTO periode (nom, dureeMois) VALUES (?, ?)";
+    public void create(Acces acces) {
+        String sql = "INSERT INTO acces (nom) VALUES (?)";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
-            statement.setString(1, periode.nom());
-            statement.setInt(2, periode.dureeMois());
+            statement.setString(1, acces.nom());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -27,19 +26,15 @@ public class PeriodeDao implements Dao<Periode> {
     }
 
     @Override
-    public Optional<Periode> findById(int id) {
-        String sql = "SELECT nom, dureeMois FROM periode WHERE id = ?";
+    public Optional<Acces> findById(int id) {
+        String sql = "SELECT nom FROM acces WHERE id = ?";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             var resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return Optional.of(new Periode(
-                        id,
-                        resultSet.getString("nom"),
-                        resultSet.getInt("dureeMois")
-                ));
+                return Optional.of(new Acces(id, resultSet.getString("nom")));
             }
             statement.close();
         } catch (SQLException e) {
@@ -49,14 +44,13 @@ public class PeriodeDao implements Dao<Periode> {
     }
 
     @Override
-    public void update(Periode periode) {
+    public void update(Acces acces) {
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "UPDATE periode SET nom=?, dureeMois=? WHERE id=?";
+            String sql = "UPDATE acces SET nom=? WHERE id=?";
             var statement = connection.prepareStatement(sql);
-            statement.setString(1, periode.nom());
-            statement.setInt(2, periode.dureeMois());
-            statement.setInt(3, periode.id());
+            statement.setString(1, acces.nom());
+            statement.setInt(2, acces.id());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -65,12 +59,12 @@ public class PeriodeDao implements Dao<Periode> {
     }
 
     @Override
-    public void delete(Periode periode) {
+    public void delete(Acces acces) {
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "DELETE FROM periode WHERE id = ?";
+            String sql = "DELETE FROM acces WHERE id = ?";
             var statement = connection.prepareStatement(sql);
-            statement.setInt(1, periode.id());
+            statement.setInt(1, acces.id());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -79,24 +73,23 @@ public class PeriodeDao implements Dao<Periode> {
     }
 
     @Override
-    public List<Periode> getAll() {
-        List<Periode> periodes = new ArrayList<>();
+    public List<Acces> getAll() {
+        List<Acces> access = new ArrayList<>();
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "SELECT id, nom FROM periode";
+            String sql = "SELECT id, nom FROM acces";
             var statement = connection.createStatement();
             var resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
-                periodes.add(new Periode(
+                access.add(new Acces(
                         resultSet.getInt("id"),
-                        resultSet.getString("nom"),
-                        resultSet.getInt("dureeMois")
+                        resultSet.getString("nom")
                 ));
             }
             statement.close();
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return periodes;
+        return access;
     }
 }

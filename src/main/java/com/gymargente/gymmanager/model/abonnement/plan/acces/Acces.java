@@ -1,4 +1,4 @@
-package com.gymargente.gymmanager.model.plan.acces;
+package com.gymargente.gymmanager.model.abonnement.plan.acces;
 
 public record Acces(int id, String nom) {
 

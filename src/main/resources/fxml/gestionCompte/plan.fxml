@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="265.0" prefWidth="295.0" xmlns="http://javafx.com/javafx/19">
+    <Label layoutX="14.0" layoutY="6.0" text="Plans"/>
+    <TreeTableView fx:id="tvPlans" layoutX="14.0" layoutY="33.0" prefHeight="200.0" prefWidth="266.0">
+        <columns>
+            <TreeTableColumn prefWidth="75.0" text="C1"/>
+            <TreeTableColumn prefWidth="75.0" text="C2"/>
+            <TreeTableColumn prefWidth="75.0" text="C3"/>
+        </columns>
+    </TreeTableView>
+</AnchorPane>

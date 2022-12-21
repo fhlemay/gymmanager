@@ -13,7 +13,7 @@ import java.util.Optional;
 public class ClientDao implements Dao<Client> {
     @Override
     public void create(Client client) {
-        String sql = "INSERT INTO client (nom, prenom, courriel, telephone, dateAdhesion) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO client (nom, prenom, courriel, telephone, dateAdhesion, montantDu ) VALUES (?, ?, ?, ?, ?, ?)";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
@@ -22,6 +22,7 @@ public class ClientDao implements Dao<Client> {
             statement.setString(3, client.courriel());
             statement.setString(4, client.telephone());
             statement.setDate(5, new java.sql.Date(client.dateAdhesion().getTime()));
+            statement.setBigDecimal(6,client.montantDu());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -31,7 +32,7 @@ public class ClientDao implements Dao<Client> {
 
     @Override
     public Optional<Client> findById(int id) {
-        String sql = "SELECT nom, prenom, courriel, telephone, dateAdhesion FROM client WHERE id = ?";
+        String sql = "SELECT nom, prenom, courriel, telephone, dateAdhesion, montantDu  FROM client WHERE id = ?";
         Connection connection = Database.getInstance().getConnection();
         try {
             var statement = connection.prepareStatement(sql);
@@ -44,7 +45,8 @@ public class ClientDao implements Dao<Client> {
                         resultSet.getString("prenom"),
                         resultSet.getString("courriel"),
                         resultSet.getString("telephone"),
-                        resultSet.getDate("dateConsultation")
+                        resultSet.getDate("dateAdhesion"),
+                        resultSet.getBigDecimal("montantDu")
                 );
                 return Optional.of(client);
             }
@@ -53,21 +55,21 @@ public class ClientDao implements Dao<Client> {
             throw new DaoException(e);
         }
         return Optional.empty();
-
     }
 
     @Override
     public void update(Client client) {
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "UPDATE client SET nom=?, prenom=?, courriel=?, telephone=?, dateAdhesion=? where id=?";
+            String sql = "UPDATE client SET nom=?, prenom=?, courriel=?, telephone=?, dateAdhesion=?, montantDu=? where id=?";
             var statement = connection.prepareStatement(sql);
             statement.setString(1, client.nom());
             statement.setString(2, client.prenom());
             statement.setString(3, client.courriel());
             statement.setString(4, client.telephone());
             statement.setDate(5, new java.sql.Date(client.dateAdhesion().getTime()));
-            statement.setInt(6, client.id());
+            statement.setBigDecimal(6,client.montantDu());
+            statement.setInt(7, client.id());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -94,7 +96,7 @@ public class ClientDao implements Dao<Client> {
         List<Client> clients = new ArrayList<>();
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql = "SELECT id, nom, prenom, courriel, telephone, dateAdhesion FROM client";
+            String sql = "SELECT id, nom, prenom, courriel, telephone, dateAdhesion, montantDu  FROM client";
             var statement = connection.createStatement();
             var resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
@@ -104,7 +106,8 @@ public class ClientDao implements Dao<Client> {
                         resultSet.getString("prenom"),
                         resultSet.getString("courriel"),
                         resultSet.getString("telephone"),
-                        new java.util.Date(resultSet.getTimestamp("dateAdhesion").getTime())
+                        resultSet.getDate("dateAdhesion"),
+                        resultSet.getBigDecimal("montantDu")
                 ));
             }
             statement.close();
@@ -118,7 +121,7 @@ public class ClientDao implements Dao<Client> {
         List<Client> clients = new ArrayList<>();
         Connection connection = Database.getInstance().getConnection();
         try {
-            String sql_header = "SELECT id, nom, prenom, courriel, telephone, dateAdhesion FROM client ";
+            String sql_header = "SELECT id, nom, prenom, courriel, telephone, dateAdhesion, montantDu  FROM client ";
             String sqlSearch = "WHERE CONCAT_WS(\" \", nom, prenom, courriel, telephone) LIKE ?"; // concat pour chercher sur plusieurs colonnes
             String sql = sql_header+sqlSearch;
             var statement = connection.prepareStatement(sql);
@@ -131,7 +134,8 @@ public class ClientDao implements Dao<Client> {
                         resultSet.getString("prenom"),
                         resultSet.getString("courriel"),
                         resultSet.getString("telephone"),
-                        new java.util.Date(resultSet.getTimestamp("dateAdhesion").getTime())
+                        resultSet.getDate("dateAdhesion"),
+                        resultSet.getBigDecimal("montantDu")
                 ));
             }
             statement.close();
